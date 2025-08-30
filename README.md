@@ -1,4 +1,8 @@
-# 🩺 Enhanced Medical Research AI
+# 🩺 MedVaani - Enhanced Medical Research AI
+
+[![GitHub Repository](https://img.shields.io/badge/GitHub-MedVaani-blue?style=flat-square&logo=github)](https://github.com/spasrichakkp/MedVaani)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square&logo=python)](https://python.org)
 
 A comprehensive voice-to-voice medical consultation system with enhanced diagnostic accuracy, interactive questioning, and Indian healthcare-specific drug recommendations.
 
