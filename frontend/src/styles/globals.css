@@ -1,0 +1,304 @@
+/* Global styles for MedVaani React App */
+
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS variables for consistent theming */
+:root {
+  --primary-blue: #2563eb;
+  --primary-blue-dark: #1d4ed8;
+  --success-green: #059669;
+  --success-green-dark: #047857;
+  --warning-orange: #ea580c;
+  --danger-red: #dc2626;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-900: #111827;
+  
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease-in-out;
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--gray-50);
+  color: var(--gray-900);
+  line-height: 1.5;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.5; 
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes recording-pulse {
+  0% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.7; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+.recording-indicator {
+  animation: recording-pulse 1.5s infinite;
+}
+
+/* Custom utility classes */
+.transition-all {
+  transition: var(--transition);
+}
+
+.shadow-custom {
+  box-shadow: var(--shadow-md);
+}
+
+/* Form styles */
+.form-input {
+  @apply w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors;
+}
+
+.form-input:disabled {
+  @apply bg-gray-100 cursor-not-allowed opacity-60;
+}
+
+.form-input.error {
+  @apply border-red-500 focus:ring-red-500;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-error {
+  @apply mt-1 text-sm text-red-600;
+}
+
+.form-help {
+  @apply mt-1 text-sm text-gray-500;
+}
+
+/* Button styles */
+.btn-base {
+  @apply inline-flex items-center justify-center px-4 py-2 border font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply btn-base bg-blue-600 border-transparent text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply btn-base bg-gray-600 border-transparent text-white hover:bg-gray-700 focus:ring-gray-500;
+}
+
+.btn-success {
+  @apply btn-base bg-green-600 border-transparent text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+.btn-danger {
+  @apply btn-base bg-red-600 border-transparent text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.btn-ghost {
+  @apply btn-base bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white rounded-lg shadow-md;
+}
+
+.card-header {
+  @apply px-6 py-4 border-b border-gray-200;
+}
+
+.card-body {
+  @apply px-6 py-4;
+}
+
+.card-footer {
+  @apply px-6 py-4 border-t border-gray-200;
+}
+
+/* Status indicators */
+.status-indicator {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-healthy {
+  @apply bg-green-500;
+}
+
+.status-warning {
+  @apply bg-yellow-500;
+}
+
+.status-error {
+  @apply bg-red-500;
+}
+
+.status-inactive {
+  @apply bg-gray-400;
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .mobile-full-width {
+    @apply w-full;
+  }
+  
+  .mobile-stack {
+    @apply flex-col space-y-2 space-x-0;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn-primary {
+    @apply border-2 border-blue-800;
+  }
+  
+  .form-input {
+    @apply border-2 border-gray-800;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+}
+
+/* Custom component styles */
+.consultation-form {
+  @apply card;
+}
+
+.results-panel {
+  @apply card;
+}
+
+.health-monitor {
+  @apply card;
+}
+
+/* Error boundary styles */
+.error-boundary {
+  @apply min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4;
+}
+
+.error-boundary-content {
+  @apply max-w-md mx-auto bg-white rounded-lg shadow-md p-6 text-center;
+}
+
+/* Loading states */
+.loading-overlay {
+  @apply fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50;
+}
+
+.skeleton {
+  @apply bg-gray-200 rounded animate-pulse;
+}
+
+.skeleton-text {
+  @apply skeleton h-4;
+}
+
+.skeleton-title {
+  @apply skeleton h-6;
+}
+
+.skeleton-avatar {
+  @apply skeleton w-12 h-12 rounded-full;
+}

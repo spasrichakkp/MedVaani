@@ -22,18 +22,36 @@ This system transforms basic medical consultations into comprehensive, interacti
 ## 🏗️ System Architecture
 
 ```
-Web Interface (FastAPI + HTMX)
-    ↓
-Enhanced Medical Services
-    ├── Interactive Diagnosis Service
-    ├── Progress Tracking Service
-    ├── Drug Recommendation Service
-    └── Enhanced Medical Adapter
-        ├── Infermedica API (optional)
-        ├── Clinical Knowledge Graph
-        ├── RxNorm Integration
-        └── Fallback Medical Models
+React Frontend (TypeScript)
+    ├── Components (UI Layer)
+    ├── Custom Hooks (State Management)
+    ├── Services (API Integration)
+    └── WebSocket (Real-time Updates)
+
+    ↓ HTTP/WebSocket ↓
+
+FastAPI Backend (Python)
+    ├── REST API Endpoints
+    ├── WebSocket Handlers
+    └── Enhanced Medical Services
+        ├── Interactive Diagnosis Service
+        ├── Progress Tracking Service
+        ├── Drug Recommendation Service
+        └── Enhanced Medical Adapter
+            ├── Infermedica API (optional)
+            ├── Clinical Knowledge Graph
+            ├── RxNorm Integration
+            └── Fallback Medical Models
 ```
+
+### Frontend Architecture
+
+- **React 18**: Modern functional components with hooks
+- **TypeScript**: Full type safety and better developer experience
+- **Custom Hooks**: Reusable stateful logic (WebSocket, Audio, API)
+- **Service Layer**: Centralized external service integration
+- **Error Boundaries**: Comprehensive error handling
+- **Responsive Design**: Mobile-first with Tailwind CSS
 
 ## 🚀 Quick Start
 
@@ -100,28 +118,73 @@ ENVIRONMENT=development
 
 ## 🎮 Running the Application
 
-### Development Mode
+### Quick Start (Recommended)
+
+Use the provided startup script to run both backend and frontend:
 
 ```bash
-# Start the web server
+# Make the script executable (first time only)
+chmod +x start-dev.sh
+
+# Start both backend and frontend
+./start-dev.sh
+```
+
+This will start:
+- **Backend API**: http://localhost:8000
+- **React Frontend**: http://localhost:3000
+- **API Documentation**: http://localhost:8000/docs
+
+### Manual Development Mode
+
+#### Backend Only
+
+```bash
+# Start the FastAPI backend
 python web/main.py
 
 # Or using uvicorn directly
 uvicorn web.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+#### Frontend Only
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies (first time only)
+npm install
+
+# Start React development server
+npm start
+```
+
 ### Production Mode
+
+#### Backend Production
 
 ```bash
 # Using gunicorn for production
 gunicorn web.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
+#### Frontend Production
+
+```bash
+# Build React app for production
+cd frontend
+npm run build
+
+# The built files will be served automatically by the FastAPI backend
+```
+
 ### Access the Application
 
-- **Web Interface**: http://localhost:8000
+- **React Frontend**: http://localhost:3000 (development)
+- **Backend API**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
+- **Health Check**: http://localhost:8000/api/health-check
 
 ## 📡 API Endpoints
 

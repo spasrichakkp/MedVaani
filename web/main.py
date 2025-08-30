@@ -14,7 +14,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect, UploadFile, File, Form, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 
 from infrastructure.config.dependency_injection import ApplicationContainer
 from application.use_cases.voice_consultation_use_case import VoiceConsultationUseCase
@@ -36,10 +36,23 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Setup static files and templates
+# Add CORS middleware for React frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Setup static files for React build (when built)
 web_dir = Path(__file__).parent
-app.mount("/static", StaticFiles(directory=web_dir / "static"), name="static")
-templates = Jinja2Templates(directory=web_dir / "templates")
+frontend_build_dir = web_dir.parent / "frontend" / "build"
+
+# Serve React app if build exists, otherwise serve a simple message
+if frontend_build_dir.exists():
+    app.mount("/static", StaticFiles(directory=frontend_build_dir / "static"), name="static")
+    app.mount("/", StaticFiles(directory=frontend_build_dir, html=True), name="frontend")
 
 # Initialize application container
 container = ApplicationContainer()
@@ -154,15 +167,38 @@ async def shutdown_event():
     # Container cleanup if needed
 
 
-@app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    """Main consultation interface."""
-    return templates.TemplateResponse("index.html", {"request": request})
+@app.get("/api/health-check")
+async def health_check():
+    """Health check endpoint for the API."""
+    return {"status": "healthy", "message": "Medical Research AI API is running"}
 
-@app.get("/enhanced", response_class=HTMLResponse)
-async def enhanced_consultation(request: Request):
-    """Enhanced consultation interface with real-time progress tracking."""
-    return templates.TemplateResponse("enhanced_consultation.html", {"request": request})
+# Fallback route for React app (when not using static file serving)
+@app.get("/app", response_class=HTMLResponse)
+async def react_app():
+    """Serve React app fallback."""
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>MedVaani - Medical Research AI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="root">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+                <div style="text-align: center;">
+                    <h1>🩺 MedVaani</h1>
+                    <p>React frontend is not built yet.</p>
+                    <p>Please run the React development server or build the frontend.</p>
+                    <p><strong>Development:</strong> <code>cd frontend && npm start</code></p>
+                    <p><strong>Production:</strong> <code>cd frontend && npm run build</code></p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
 
 @app.get("/health", response_class=JSONResponse)
