@@ -1,0 +1,42 @@
+# Core ML and AI dependencies
+transformers>=4.41.0
+accelerate>=0.29.0
+optimum>=1.17.0
+torch>=2.2.0; platform_system != 'Darwin' or platform_machine != 'arm64'
+torch>=2.2.0; platform_system == 'Darwin' and platform_machine == 'arm64'
+torchvision>=0.17.0
+sentencepiece>=0.1.99
+safetensors>=0.4.2
+
+# Audio processing
+soundfile>=0.12.1
+librosa>=0.10.0
+torchaudio>=2.2.0
+
+# Data handling and validation
+pydantic>=2.7.0
+pyyaml>=6.0.1
+pandas>=2.2.0
+numpy>=1.24.0
+
+# UI and visualization
+rich>=13.7.0
+Pillow>=10.2.0
+
+# Dependency injection
+dependency-injector>=4.41.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+pytest-cov>=4.1.0
+
+# Development tools
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Optional dependencies
+bitsandbytes>=0.43.0; platform_system != 'Darwin' or platform_machine != 'arm64'

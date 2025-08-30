@@ -1,0 +1,74 @@
+# Model registry for MedBench
+# You can reference models by key in CLI commands. Configure loading hints per model.
+
+models:
+  meerkat_8b:
+    repo_id: dmis-lab/llama-3-meerkat-8b-v1.0
+    task: text-generation
+    kwargs:
+      torch_dtype: float16
+      device_map: auto
+    tokenizer_kwargs:
+      use_fast: true
+
+  # Temporarily disabled for testing - model too large to download quickly
+  # aloe_medical_7b:
+  #   repo_id: HPAI-BSC/Qwen2.5-Aloe-Beta-7B
+  #   task: text-generation
+  #   kwargs:
+  #     torch_dtype: bfloat16
+  #     device_map: auto
+  #     trust_remote_code: true
+  #   tokenizer_kwargs:
+  #     use_fast: true
+  #     trust_remote_code: true
+  #   generation:
+  #     max_new_tokens: 512
+  #     do_sample: true
+  #     temperature: 0.7
+  #     top_p: 0.8
+  #     top_k: 20
+  #     repetition_penalty: 1.05
+  #   medical_config:
+  #     system_prompt: "You are an expert medical assistant named Aloe, developed by the High Performance Artificial Intelligence Group at Barcelona Supercomputing Center(BSC). You are to be a helpful, respectful, and honest assistant."
+  #     confidence_threshold: 0.3
+  #     emergency_keywords: ["chest pain", "difficulty breathing", "severe headache", "stroke", "heart attack", "unconscious", "bleeding", "seizure", "allergic reaction", "overdose"]
+
+  # Lightweight medical reasoning system for immediate testing
+  aloe_medical_7b:
+    repo_id: "lightweight_medical_reasoning"  # Special flag for lightweight system
+    task: text-generation
+    kwargs: {}
+    tokenizer_kwargs: {}
+    generation: {}
+    medical_config:
+      system_prompt: "You are an expert medical assistant named Aloe, using advanced medical reasoning algorithms."
+      confidence_threshold: 0.3
+      emergency_keywords: ["chest pain", "difficulty breathing", "severe headache", "stroke", "heart attack", "unconscious", "bleeding", "seizure", "allergic reaction", "overdose"]
+
+
+
+  flan_t5_small:
+    repo_id: google/flan-t5-small
+    task: text2text-generation
+    kwargs: {}
+    tokenizer_kwargs: {}
+
+  medical_ner:
+    repo_id: samrawal/bert-base-uncased_clinical-ner
+    task: token-classification
+    kwargs: {}
+    tokenizer_kwargs: {}
+
+  clip_vit_b32:
+    repo_id: openai/clip-vit-base-patch32
+    task: image-classification
+    kwargs: {}
+    tokenizer_kwargs: {}
+
+defaults:
+  generation:
+    max_new_tokens: 128
+    do_sample: false
+    pad_token_id: 128001
+

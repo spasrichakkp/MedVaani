@@ -1,0 +1,21 @@
+enabled:
+  - diagnosis
+  - drug_interactions
+  - summarization
+  - cds
+  - imaging
+
+thresholds:
+  diagnosis: 0.5
+  drug_interactions: 0.5
+  summarization: 0.5
+  cds: 0.5
+  imaging: 0.3
+
+cases:
+  diagnosis: tests/cases/diagnosis.jsonl
+  drug_interactions: tests/cases/drug_interactions.jsonl
+  summarization: tests/cases/summarization.jsonl
+  cds: tests/cases/cds.jsonl
+  imaging: tests/cases/imaging.jsonl
+

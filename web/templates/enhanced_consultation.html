@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Medical Consultation - Medical Research AI</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', path='enhanced-styles.css') }}">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Connection Status Bar -->
+    <div class="bg-white border-b border-gray-200 px-4 py-2">
+        <div class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center space-x-4">
+                <h1 class="text-lg font-semibold text-gray-900">Medical Research AI</h1>
+                <div id="connection-status" class="connection-status status-disconnected">
+                    Connecting...
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="emergency-button" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    🚨 Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Container -->
+    <div id="notifications-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Progress Section -->
+        <div id="progress-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6" style="display: none;">
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-medium text-gray-900">Consultation Progress</h3>
+                    <span id="estimated-time" class="text-sm text-gray-500"></span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div id="consultation-progress" 
+                         class="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out" 
+                         style="width: 0%"
+                         role="progressbar" 
+                         aria-valuenow="0" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                
+                <!-- Step Indicators -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="step-indicator" data-step="initializing">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">1</div>
+                        <span class="text-xs text-gray-600 mt-1">Initialize</span>
+                    </div>
+                    <div class="step-indicator" data-step="analyzing_symptoms">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">2</div>
+                        <span class="text-xs text-gray-600 mt-1">Analyze</span>
+                    </div>
+                    <div class="step-indicator" data-step="generating_questions">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">3</div>
+                        <span class="text-xs text-gray-600 mt-1">Questions</span>
+                    </div>
+                    <div class="step-indicator" data-step="generating_diagnosis">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">4</div>
+                        <span class="text-xs text-gray-600 mt-1">Diagnose</span>
+                    </div>
+                    <div class="step-indicator" data-step="recommending_treatments">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">5</div>
+                        <span class="text-xs text-gray-600 mt-1">Treatments</span>
+                    </div>
+                    <div class="step-indicator" data-step="finalizing_results">
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-sm font-medium">6</div>
+                        <span class="text-xs text-gray-600 mt-1">Finalize</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Message -->
+                <div id="progress-message" class="text-center text-gray-600 font-medium"></div>
+            </div>
+        </div>
+
+        <!-- Enhanced Consultation Form -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Enhanced Medical Consultation</h2>
+            
+            <form id="consultation-form" 
+                  hx-post="/api/consultation/enhanced" 
+                  hx-target="#results-section"
+                  hx-indicator="#loading-indicator"
+                  class="space-y-6">
+                
+                <!-- Patient Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="patient_age" class="block text-sm font-medium text-gray-700 mb-2">Age</label>
+                        <input type="number" 
+                               id="patient_age" 
+                               name="patient_age" 
+                               min="1" 
+                               max="120" 
+                               required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="patient_gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select id="patient_gender" 
+                                name="patient_gender" 
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Symptoms Input -->
+                <div>
+                    <label for="symptoms" class="block text-sm font-medium text-gray-700 mb-2">
+                        Describe your symptoms
+                        <span class="text-gray-500 text-xs">(Be as detailed as possible)</span>
+                    </label>
+                    <textarea id="symptoms" 
+                              name="symptoms" 
+                              rows="4" 
+                              required
+                              placeholder="Please describe your symptoms, including when they started, severity, and any factors that make them better or worse..."
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+                    <div class="mt-2 text-sm text-gray-500">
+                        <span id="char-count">0</span>/1000 characters
+                    </div>
+                </div>
+
+                <!-- Voice Input Option -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-gray-700">Voice Input</h3>
+                        <button type="button" 
+                                id="voice-toggle" 
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                                data-requires-connection="true">
+                            🎤 Record Symptoms
+                        </button>
+                    </div>
+                    <div id="voice-status" class="text-sm text-gray-500">
+                        Click the microphone to record your symptoms
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-500">
+                        <span class="offline-indicator" style="display: none;">
+                            ⚠️ Limited functionality - connection required for real-time features
+                        </span>
+                    </div>
+                    <button type="submit" 
+                            class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                        Start Enhanced Consultation
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="htmx-indicator">
+                <div class="flex items-center justify-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="ml-3 text-gray-600">Processing your consultation...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="mt-6"></div>
+
+        <!-- Health Panel -->
+        <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">System Health</h3>
+                <div id="health-status"></div>
+            </div>
+            <div id="health-panel" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Enhanced Styles -->
+    <style>
+        .connection-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-connected {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-disconnected {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-error, .status-failed {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .step-indicator.active .w-8 {
+            background-color: #2563eb;
+            color: white;
+        }
+        
+        .step-indicator.completed .w-8 {
+            background-color: #059669;
+            color: white;
+        }
+        
+        .notification {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .notification-content {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .htmx-indicator {
+            display: none;
+        }
+        
+        .htmx-request .htmx-indicator {
+            display: block;
+        }
+        
+        .htmx-request form {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', path='app.js') }}"></script>
+    <script>
+        // Initialize the enhanced medical app
+        const app = new MedicalResearchApp();
+        
+        // Character counter for symptoms textarea
+        document.getElementById('symptoms').addEventListener('input', function() {
+            const charCount = this.value.length;
+            document.getElementById('char-count').textContent = charCount;
+            
+            if (charCount > 1000) {
+                this.value = this.value.substring(0, 1000);
+                document.getElementById('char-count').textContent = 1000;
+            }
+        });
+        
+        // Form submission handler
+        document.getElementById('consultation-form').addEventListener('htmx:beforeRequest', function() {
+            // Show progress section
+            document.getElementById('progress-section').style.display = 'block';
+            
+            // Reset progress
+            app.currentStep = 0;
+            app.updateProgressBar(0, 'Initializing consultation...');
+            app.updateStepIndicator(0);
+        });
+    </script>
+</body>
+</html>
