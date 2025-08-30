@@ -6,6 +6,8 @@
 
 A comprehensive voice-to-voice medical consultation system with enhanced diagnostic accuracy, interactive questioning, and Indian healthcare-specific drug recommendations.
 
+> 📋 **For AI Agents & Developers**: See [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) for comprehensive codebase documentation and integration guidelines.
+
 ## 🎯 Project Overview
 
 This system transforms basic medical consultations into comprehensive, interactive healthcare guidance specifically designed for the Indian population. It features:
@@ -330,6 +332,13 @@ For issues and questions:
 1. Check the troubleshooting section above
 2. Review existing issues in the repository
 3. Create a new issue with detailed information about your problem
+
+## 📚 Documentation & Context
+
+- **[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)** - Comprehensive codebase documentation for AI agents and developers
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick setup and usage guide
+- **[API Documentation](api-testing/documentation/API_Reference.md)** - Complete API reference
+- **[Enhanced Medical System](docs/ENHANCED_MEDICAL_DIAGNOSIS_SYSTEM.md)** - Technical architecture details
 
 ---
 
